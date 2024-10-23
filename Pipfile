@@ -10,6 +10,7 @@ pymongo = "*"
 pandas = "*"
 python-dotenv = "*"
 flask-cors = "*"
+black = "*"
 
 [dev-packages]
 ipykernel = "*"
