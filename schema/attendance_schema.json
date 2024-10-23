@@ -1,0 +1,35 @@
+{
+    "bsonType": "object",
+    "required": [],
+    "properties": {
+        "_id": {
+            "bsonType": "objectId",
+            "description": "Worker ID"
+        },
+        "NAME": {
+            "bsonType": "string",
+            "description": "Worker Name"
+        },
+        "CITY": {
+            "bsonType": "string",
+            "description": "Worker City"
+        },
+        "ASSIGNED_CLIENT_ID": {
+            "bsonType": "objectId",
+            "description": "Assigned Client"
+        },
+        "ATTENDANCE": {
+            "bsonType": "string",
+            "description": "Attendance Data"
+        },
+        "STATUS": {
+            "bsonType": "string",
+            "description": "Labourer Status",
+            "enum": [
+                "Available",
+                "Absent",
+                "Assigned"
+            ]
+        }
+    }
+}

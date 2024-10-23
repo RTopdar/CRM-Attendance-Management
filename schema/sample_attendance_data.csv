@@ -1,0 +1,21 @@
+NAME,CITY,ASSIGNED_CLIENT_ID,ATTENDANCE,STATUS,PHONE_NUMBER,EMAIL
+Aarav Sharma,Mumbai,101,85,Active,+91-9876543210,aarav.sharma@example.com
+Vihaan Verma,Delhi,102,90,Active,+91-8765432109,vihaan.verma@example.com
+Isha Kapoor,Bangalore,103,78,Inactive,+91-7654321098,isha.kapoor@example.com
+Aditya Nair,Hyderabad,104,88,Active,+91-6543210987,aditya.nair@example.com
+Anika Patel,Ahmedabad,105,92,Active,+91-5432109876,anika.patel@example.com
+Rohan Mehta,Pune,106,80,Inactive,+91-4321098765,rohan.mehta@example.com
+Pooja Deshmukh,Chennai,107,95,Active,+91-3210987654,pooja.deshmukh@example.com
+Aryan Singh,Kolkata,108,76,Inactive,+91-2109876543,aryan.singh@example.com
+Nisha Malhotra,Jaipur,109,89,Active,+91-1098765432,nisha.malhotra@example.com
+Ravi Iyer,Surat,110,94,Active,+91-9876543211,ravi.iyer@example.com
+Priya Bansal,Nagpur,111,86,Inactive,+91-8765432108,priya.bansal@example.com
+Kiran Rao,Lucknow,112,91,Active,+91-7654321097,kiran.rao@example.com
+Siddharth Khanna,Indore,113,77,Inactive,+91-6543210986,siddharth.khanna@example.com
+Tara Gupta,Bhopal,114,84,Active,+91-5432109875,tara.gupta@example.com
+Rahul Reddy,Kanpur,115,93,Active,+91-4321098764,rahul.reddy@example.com
+Simran Joshi,Patna,116,79,Inactive,+91-3210987653,simran.joshi@example.com
+Kunal Thakur,Vadodara,117,87,Active,+91-2109876542,kunal.thakur@example.com
+Meera Bajaj,Gurgaon,118,82,Inactive,+91-1098765431,meera.bajaj@example.com
+Rajiv Kaul,Noida,119,81,Active,+91-9876543212,rajiv.kaul@example.com
+Neha Bose,Chandigarh,120,90,Inactive,+91-8765432107,neha.bose@example.com
