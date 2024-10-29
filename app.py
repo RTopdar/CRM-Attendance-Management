@@ -60,7 +60,7 @@ def get_attendance_entry():
 def save_attendance_entry():
     data = request.json
     date = data.get("DATE")
-    WORKER_DATA = data.get("WORKER_DATA")
+    WORKER_DATA = data.get("WORKER_LIST")
 
     if date is None:
         return jsonify({"message": "Date is required."}), 400
