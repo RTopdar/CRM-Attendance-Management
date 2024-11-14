@@ -11,6 +11,7 @@ pandas = "*"
 python-dotenv = "*"
 flask-cors = "*"
 black = "*"
+bcrypt = "*"
 
 [dev-packages]
 ipykernel = "*"
