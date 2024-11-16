@@ -1,0 +1,54 @@
+{
+    "bsonType": "object",
+    "required": [],
+    "properties": {
+        "_id": {
+            "bsonType": "objectId",
+            "description": "Client ID"
+        },
+        "NAME": {
+            "bsonType": "string",
+            "description": "Client Name"
+        },
+        "ADDRESS": {
+            "bsonType": "string",
+            "description": "Client Address"
+        },
+        "EMAIL": {
+            "bsonType": "string",
+            "description": "Client Email"
+        },
+        "MOBILE": {
+            "bsonType": "double",
+            "description": "Client Mobile"
+        },
+        "WEBSITE": {
+            "bsonType": "string",
+            "description": "Client Website"
+        },
+        "CONTACT_NAME": {
+            "bsonType": "string",
+            "description": "Contact Name"
+        },
+        "CONTACT_NUMBER": {
+            "bsonType": "double",
+            "description": "Contact Number"
+        },
+        "CONTACT_EMAIL": {
+            "bsonType": "string",
+            "description": "Contact Email"
+        },
+        "ONBOARDING_DATE": {
+            "bsonType": "date",
+            "description": "Onboarding Date"
+        },
+        "GST_NUMBER": {
+            "bsonType": "string",
+            "description": "GST Number"
+        },
+        "BILLING_DATE": {
+            "bsonType": "date",
+            "description": "Billing Date"
+        }
+    }
+}

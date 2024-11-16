@@ -1,0 +1,12 @@
+VARIABLE NAME,DESCRIPTION,DATA TYPE,VALIDATION RULES,COMMENT
+NAME,Client Name,String,Required,
+ADDRESS,Client Address,String,Required,
+EMAIL,Client Email,String,,
+MOBILE,Client Mobile,Number,,
+WEBSITE,Client Website,String,,
+CONTACT_NAME,Contact Name,String,,
+CONTACT_NUMBER,Contact Number,Number,,
+CONTACT_EMAIL,Contact Email,String,,
+ONBOARDING_DATE,Onboarding Date,Date,,
+GST_NUMBER,GST Number,String,,
+BILLING_DATE,Billing Date,Date,,

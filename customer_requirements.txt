@@ -1,0 +1,53 @@
+ - Show only data of presentees in the csv and pdf report
+
+
+
+
+Three table - customers, attendance, resources
+
+
+Customer is connected to Attendance to check which workers are assigned to which workers
+
+Resources is connected to attendance to to show only the active resources
+
+
+
+
+
+1. Login Page
+Desc:- User will open the login page on a web browser and provide the credentials to login. 
+
+2. Home Page 
+Desc:- This will be the landing page after login. The user will have an option to access below information,
+	- Mark Attendance Button/Pallet
+	- Total Active/Inactive Accounts Count Pallet
+	- Total Active/Inactive Resources Count Pallet
+	- Monthly/Quarterly Attendance History Pallet
+	- Payments Due Pallet
+
+3. Customers - List of firms where resources are provided
+Desc:- This object will store data of all the firms to whom supplier provides resources. It will store below details of the customer,
+	- Name
+	- Address
+	- Email
+	- Mobile
+	- Website
+	- Contact Name
+	- Contact Number
+	- Contact Email
+	- Onboarding Date
+	- GST Number
+	- Billing Date
+	- Avg. Monthly Revenue
+	- Avg. Monthly Requirement
+
+
+4. Attendance - Daily attendance marker
+Desc:- This object will store daily attendance of the resources. The user will access the list of active resources, set the customer name & mark present/absent accordingly. The system should capture system timestamp. The user will not be allowed to change the date(s) and mark attendance. The user will have an option to download & email daily marked attendance of the same date or automatically the marked attendance should be emailed to the respective user & related business stakeholders.
+
+
+5. Resources - List of all the resources
+6. Payments - All the payment information related to resources & accounts
+7. Summary - List of resources & their monthly attendance summary 
+8. Overtime - Daily overtime marker
+9. Invoices - Generate invoices by accounts

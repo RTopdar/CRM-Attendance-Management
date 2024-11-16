@@ -11,10 +11,12 @@ from lib.db import (
 
 worker_bp = Blueprint("worker", __name__)
 
+
 @worker_bp.route("/", methods=["GET"])
 def get_all_workers():
     list = get_all_worker_data()
     return jsonify(list)
+
 
 @worker_bp.route("/all", methods=["GET"])
 def get_all_attendance():
@@ -23,6 +25,7 @@ def get_all_attendance():
     for entry in list:
         attendance_Data[entry["DATE"]] = entry
     return jsonify(attendance_Data)
+
 
 @worker_bp.route("/attendance", methods=["GET"])
 def get_attendance_entry():
@@ -40,6 +43,7 @@ def get_attendance_entry():
         }
     )
 
+
 @worker_bp.route("/attendance", methods=["POST"])
 def save_attendance_entry():
     data = request.json
@@ -56,8 +60,8 @@ def save_attendance_entry():
 
     return jsonify({"message": message})
 
-@worker_bp.route("/attendance/report", methods=["GET"])
 
+@worker_bp.route("/attendance/report", methods=["GET"])
 def get_attendance_report():
     date = request.args.get("DATE")
 
@@ -66,4 +70,3 @@ def get_attendance_report():
 
     worker_data = generate_csv_report(date)
     return jsonify(worker_data)
-

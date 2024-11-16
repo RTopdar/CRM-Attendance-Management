@@ -1,5 +1,4 @@
 VARIABLE NAME,DESCRIPTION,DATA TYPE,VALIDATION RULES,COMMENT
-_id,Worker ID,ObjectId,,Primary identifier
 NAME,Worker Name,String,,
 CITY,Worker City,String,,
 ASSIGNED_CLIENT_ID,Assigned Client,ObjectId,,Links to Clients _id
