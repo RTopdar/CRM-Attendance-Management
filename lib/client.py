@@ -9,7 +9,7 @@ from lib.db import (
 client_bp = Blueprint("client", __name__)
 
 
-@client_bp.route("/", methods=["POST"])
+@client_bp.route("/", methods=["GET"])
 def create_new_customer():
     client_form = create_customer()
     return jsonify(
@@ -41,7 +41,7 @@ def save_customer_data():
     CUSTOMER_DATA = data.get("CUSTOMER_DATA")
     response = save_new_customer_data(CUSTOMER_DATA)
     if response["MESSAGE"] == "CUSTOMER DATA SAVED SUCCESSFULLY.":
-        return jsonify(response, 200)
+        return jsonify(response), 200
     else:
         return jsonify(response), 400
 
@@ -61,6 +61,6 @@ def update_customer():
     message = update_customer_data(CUSTOMER_ID, CUSTOMER_DATA)
 
     if message["MESSAGE"] == "CUSTOMER UPDATED SUCCESSFULLY.":
-        return jsonify(message, 200)
+        return jsonify(message), 200
     else:
         return jsonify(message), 400
