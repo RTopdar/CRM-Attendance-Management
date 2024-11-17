@@ -30,7 +30,10 @@ VERSION = os.environ.get("VERSION", "v0.0.1")
 def home():
     db = get_db()
     if db is not None:
-        return f"Attendance Management System API v{VERSION}"
+        return {
+            "MESSAGE": "Human Resource Management System API.",
+            "VERSION": VERSION,
+        }
     return "Unable to connect to MongoDB"
 
 
