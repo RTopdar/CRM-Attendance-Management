@@ -29,4 +29,7 @@ def login():
         return jsonify({"message": "Username and password are required."}), 400
 
     result = login_user(username, password)
-    return jsonify(result)
+    if result["message"] == "Login successful.":
+        return jsonify(result)
+    else:
+        return jsonify(result), 401

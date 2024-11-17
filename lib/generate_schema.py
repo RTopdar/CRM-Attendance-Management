@@ -74,7 +74,7 @@ def generate_worker_schema(df: pd.DataFrame, output_file: str) -> None:
 def create_client_schema():
     csv_file_path = "schema/Attendance Schema - Client.csv"
     df = pd.read_csv(csv_file_path)
-    
+
     schema = {"bsonType": "object", "required": [], "properties": {}}
 
     for _, row in df.iterrows():
@@ -100,7 +100,7 @@ def create_client_schema():
                 schema["properties"][field_name] = {
                     "bsonType": bson_type,
                     "description": description,
-                    "pattern": r"^[\w\.-]+@[\w\.-]+\.\w+$"
+                    "pattern": r"^[\w\.-]+@[\w\.-]+\.\w+$",
                 }
                 continue
 
@@ -129,6 +129,7 @@ def create_client_schema():
     output_file = "schema/client_schema.json"
     with open(output_file, "w") as f:
         json.dump(schema, f, indent=4)
+
 
 if __name__ == "__main__":
     # csv_file_path = "schema/Attendance Schema - Workers.csv"

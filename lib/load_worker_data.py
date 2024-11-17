@@ -19,9 +19,24 @@ csv_file_path = os.path.abspath("schema/sample_attendance_data.csv")
 
 df = pd.read_csv(csv_file_path)
 
-collection = db["Worker_Data"]
 
-records = df.to_dict(orient="records")
+def transform_worker_data(row):
+    return {
+        "NAME": {"DESCRIPTION": "Worker Name", "VALUE": row["NAME"]},
+        "CITY": {"DESCRIPTION": "Worker City", "VALUE": row["CITY"]},
+        "ASSIGNED_CLIENT_ID": {
+            "DESCRIPTION": "Assigned Client",
+            "VALUE": row["ASSIGNED_CLIENT_ID"],
+        },
+        "STATUS": {"DESCRIPTION": "Labourer Status", "VALUE": row["STATUS"]},
+        "PHONE_NUMBER": {"DESCRIPTION": "Phone Number", "VALUE": row["PHONE_NUMBER"]},
+        "EMAIL": {"DESCRIPTION": "Email", "VALUE": row["EMAIL"]},
+    }
+
+
+records = df.apply(transform_worker_data, axis=1).tolist()
+
+collection = db["Worker_Data"]
 
 try:
     result = collection.insert_many(records)

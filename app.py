@@ -7,6 +7,7 @@ from lib.db import (
 )
 from lib.auth import auth_bp
 from lib.workers import worker_bp
+from lib.client import client_bp
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -15,6 +16,7 @@ CORS(app)
 
 app.register_blueprint(auth_bp, url_prefix="/auth")
 app.register_blueprint(worker_bp, url_prefix="/workers")
+app.register_blueprint(client_bp, url_prefix="/clients")
 
 import os
 from dotenv import load_dotenv

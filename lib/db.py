@@ -105,28 +105,6 @@ def create_Worker_Schema():
     return worker_schema
 
 
-def generate_new_client_response():
-    csv_file_path = "schema/Attendance Schema - Client.csv"
-    df = pd.read_csv(csv_file_path)
-    
-    client_data = {}
-    for _, row in df.iterrows():
-        field_name = row["VARIABLE NAME"]
-        description = row["DESCRIPTION"]
-        
-        client_data[field_name] = {
-            "DESCRIPTION": description,
-            "VALUE": ""
-        }
-    
-    response = {
-        "CREATED_ON": datetime.now().strftime("%Y-%m-%d"),
-        "CLIENT_DATA": client_data
-    }
-    
-    return response
-
-
 # Create a new Attendance Entry
 def create_Attendance_Entry(date=None):
     print(f"Creating Attendance Entry at {date}")
@@ -226,13 +204,14 @@ def generate_csv_report(date):
     worker_list = report["WORKER_LIST"]
 
     # Filter out workers with status "ABSENT"
-    worker_list = [worker for worker in worker_list if worker["STATUS"]["VALUE"] != "ABSENT"]
+    worker_list = [
+        worker for worker in worker_list if worker["STATUS"]["VALUE"] != "ABSENT"
+    ]
 
     # Prepare the worker data
     for worker in worker_list:
         worker["Name"] = worker.pop("Worker_Name")
         worker["Email"] = worker.pop("Worker_Email")
-        # worker["Status"] = worker.pop("STATUS")
         worker["Phone"] = worker.pop("Worker_Phone")
         worker.pop("Worker_ID", None)
 
@@ -251,93 +230,115 @@ def generate_csv_report(date):
 
     return csv_data
 
-    # worker_list = report["WORKER_LIST"]
 
-    # present = report["PRESENT"] if "PRESENT" in report else 0
+def generate_new_client_response():
+    csv_file_path = "schema/Attendance Schema - Client.csv"
+    df = pd.read_csv(csv_file_path)
 
-    # # Prepare the worker data
-    # for worker in worker_list:
-    #     worker["Name"] = worker.pop("Worker_Name")
-    #     worker["Email"] = worker.pop("Worker_Email")
-    #     worker["Status"] = worker.pop("STATUS")
-    #     worker["Phone"] = worker.pop("Worker_Phone")
-    #     worker.pop("Worker_ID", None)
+    client_data = {}
+    for _, row in df.iterrows():
+        field_name = row["VARIABLE NAME"]
+        description = row["DESCRIPTION"]
 
-    # # Create a DataFrame for the worker list
-    # df = pd.DataFrame(worker_list, columns=["Name", "Email", "Status"])
+        client_data[field_name] = {"DESCRIPTION": description, "VALUE": ""}
+    # Get current time in IST
+    import pytz
 
-    # # Create a single-row DataFrame for presentee and absentee counts
-    # summary_df = pd.DataFrame(
-    #     [
-    #         {
-    #             "Name": "",
-    #             "Email": "",
-    #             "Status": "",
-    #             "Phone": "",
-    #             "Presentee": present,
-    #             "Date": date,
-    #         }
-    #     ]
-    # )
+    ist = pytz.timezone("Asia/Kolkata")
+    created_on_ist = datetime.now(ist).strftime("%Y-%m-%d %H:%M:%S %Z%z")
+    response = {"CREATED_ON": created_on_ist, "CUSTOMER_DATA": client_data}
 
-    # # Add the new columns for presentee and absentee counts to the worker DataFrame
-    # df["Presentee"] = ""
-
-    # # Concatenate the worker DataFrame with the summary row
-    # df = pd.concat([df, summary_df], ignore_index=True)
-
-    # # Convert the DataFrame to CSV
-    # csv_data = df.to_csv(index=False)
-
-    # # Save the CSV to a local file
-    # csv_file_path = f"attendance_report_{date}.csv"
-    # with open(csv_file_path, "w") as file:
-    #     file.write(csv_data)
-
-    # print(f"CSV report saved to {csv_file_path}")
-
-    # return csv_data
+    return response
 
 
 #  Create a new customer
 
 
-def CREATE_CUSTOMER(
-    NAME,
-    ADDRESS,
-    EMAIL,
-    MOBILE,
-    WEBSITE,
-    CONTACT_NAME,
-    CONTACT_NUMBER,
-    CONTACT_EMAIL,
-    ONBOARDING_DATE,
-    GST_NUMBER,
-    BILLING_DATE,
-    AVG_MONTHLY_REVENUE,
-    AVG_MONTHLY_REQUIREMENT,
-):
-    DB = get_db()
-    CUSTOMER = {
-        "NAME": NAME,
-        "ADDRESS": ADDRESS,
-        "EMAIL": EMAIL,
-        "MOBILE": MOBILE,
-        "WEBSITE": WEBSITE,
-        "CONTACT_NAME": CONTACT_NAME,
-        "CONTACT_NUMBER": CONTACT_NUMBER,
-        "CONTACT_EMAIL": CONTACT_EMAIL,
-        "ONBOARDING_DATE": ONBOARDING_DATE,
-        "GST_NUMBER": GST_NUMBER,
-        "BILLING_DATE": BILLING_DATE,
-        "AVG_MONTHLY_REVENUE": AVG_MONTHLY_REVENUE,
-        "AVG_MONTHLY_REQUIREMENT": AVG_MONTHLY_REQUIREMENT,
-    }
-    RESULT = DB["CUSTOMERS"].INSERT_ONE(CUSTOMER)
-    return {
-        "MESSAGE": "CUSTOMER CREATED SUCCESSFULLY.",
-        "CUSTOMER_ID": STR(RESULT.INSERTED_ID),
-    }
+def create_customer():
+
+    new_client_response = generate_new_client_response()
+    return new_client_response
+
+
+# SAVE CUSTOMER DATA
+def save_new_customer_data(CUSTOMER_DATA):
+    db = get_db()
+
+    if CUSTOMER_DATA["CUSTOMER_DATA"]["NAME"]["VALUE"] == "":
+        return {"MESSAGE": "CUSTOMER NAME IS REQUIRED."}
+    if CUSTOMER_DATA["CUSTOMER_DATA"]["EMAIL"]["VALUE"] == "":
+        return {"MESSAGE": "CUSTOMER EMAIL IS REQUIRED."}
+    if CUSTOMER_DATA["CUSTOMER_DATA"]["MOBILE"]["VALUE"] == "":
+        return {"MESSAGE": "CUSTOMER MOBILE IS REQUIRED."}
+
+    check_entry = db["Customers"].find_one(
+        {"CUSTOMER_DATA.EMAIL.VALUE": CUSTOMER_DATA["CUSTOMER_DATA"]["EMAIL"]["VALUE"]}
+    )
+    if check_entry is not None:
+        return {"MESSAGE": "CUSTOMER EMAIL ALREADY EXISTS."}
+    check_entry = db["Customers"].find_one(
+        {
+            "CUSTOMER_DATA.MOBILE.VALUE": CUSTOMER_DATA["CUSTOMER_DATA"]["MOBILE"][
+                "VALUE"
+            ]
+        }
+    )
+    if check_entry is not None:
+        return {"MESSAGE": "CUSTOMER MOBILE ALREADY EXISTS."}
+    check_entry = db["Customers"].find_one(
+        {"CUSTOMER_DATA.NAME.VALUE": CUSTOMER_DATA["CUSTOMER_DATA"]["NAME"]["VALUE"]}
+    )
+    if check_entry is not None:
+        return {"MESSAGE": "CUSTOMER NAME ALREADY EXISTS."}
+
+    result = db["Customers"].insert_one(CUSTOMER_DATA)
+    new_entry = db["Customers"].find_one({"_id": result.inserted_id})
+    new_entry["_id"] = str(new_entry["_id"])
+    return {"MESSAGE": "CUSTOMER DATA SAVED SUCCESSFULLY.", "CUSTOMER_DATA": new_entry}
+
+
+from bson import ObjectId
+
+
+from bson import ObjectId
+
+def update_customer_data(CUSTOMER_ID, CUSTOMER_DATA):
+    db = get_db()
+
+    if CUSTOMER_DATA["NAME"]["VALUE"] == "":
+        return {"MESSAGE": "CUSTOMER NAME IS REQUIRED."}
+    if CUSTOMER_DATA["EMAIL"]["VALUE"] == "":
+        return {"MESSAGE": "CUSTOMER EMAIL IS REQUIRED."}
+    if CUSTOMER_DATA["MOBILE"]["VALUE"] == "":
+        return {"MESSAGE": "CUSTOMER MOBILE IS REQUIRED."}
+    
+    # Convert CUSTOMER_ID to ObjectId
+    customer_id_obj = ObjectId(CUSTOMER_ID)
+    
+    customer_entries = get_all_customers()
+    for entry in customer_entries:
+        if (
+            entry["_id"] != str(customer_id_obj)  
+            and entry["CUSTOMER_DATA"]["EMAIL"]["VALUE"] == CUSTOMER_DATA["EMAIL"]["VALUE"]
+        ):
+            return {"MESSAGE": "CUSTOMER EMAIL ALREADY EXISTS."}
+        elif (
+            entry["_id"] != str(customer_id_obj)  
+            and entry["CUSTOMER_DATA"]["MOBILE"]["VALUE"] == CUSTOMER_DATA["MOBILE"]["VALUE"]
+        ):
+            return {"MESSAGE": "CUSTOMER MOBILE ALREADY EXISTS."}
+        elif (
+            entry["_id"] != str(customer_id_obj)  
+            and entry["CUSTOMER_DATA"]["NAME"]["VALUE"] == CUSTOMER_DATA["NAME"]["VALUE"]
+        ):
+            return {"MESSAGE": "CUSTOMER NAME ALREADY EXISTS."}
+
+    result = db["Customers"].update_one(
+        {"_id": customer_id_obj}, {"$set": {"CUSTOMER_DATA": CUSTOMER_DATA}}
+    )
+    if result.matched_count == 0:
+        return {"MESSAGE": "CUSTOMER NOT FOUND."}
+    return {"MESSAGE": "CUSTOMER UPDATED SUCCESSFULLY."}
 
 
 # Get all customers
@@ -361,57 +362,6 @@ def get_customer_by_id(customer_id):
 # Update a customer
 
 
-def UPDATE_CUSTOMER(
-    CUSTOMER_ID,
-    NAME=None,
-    ADDRESS=None,
-    EMAIL=None,
-    MOBILE=None,
-    WEBSITE=None,
-    CONTACT_NAME=None,
-    CONTACT_NUMBER=None,
-    CONTACT_EMAIL=None,
-    ONBOARDING_DATE=None,
-    GST_NUMBER=None,
-    BILLING_DATE=None,
-    AVG_MONTHLY_REVENUE=None,
-    AVG_MONTHLY_REQUIREMENT=None,
-):
-    DB = get_db()
-    UPDATE_FIELDS = {}
-    if NAME:
-        UPDATE_FIELDS["NAME"] = NAME
-    if ADDRESS:
-        UPDATE_FIELDS["ADDRESS"] = ADDRESS
-    if EMAIL:
-        UPDATE_FIELDS["EMAIL"] = EMAIL
-    if MOBILE:
-        UPDATE_FIELDS["MOBILE"] = MOBILE
-    if WEBSITE:
-        UPDATE_FIELDS["WEBSITE"] = WEBSITE
-    if CONTACT_NAME:
-        UPDATE_FIELDS["CONTACT_NAME"] = CONTACT_NAME
-    if CONTACT_NUMBER:
-        UPDATE_FIELDS["CONTACT_NUMBER"] = CONTACT_NUMBER
-    if CONTACT_EMAIL:
-        UPDATE_FIELDS["CONTACT_EMAIL"] = CONTACT_EMAIL
-    if ONBOARDING_DATE:
-        UPDATE_FIELDS["ONBOARDING_DATE"] = ONBOARDING_DATE
-    if GST_NUMBER:
-        UPDATE_FIELDS["GST_NUMBER"] = GST_NUMBER
-    if BILLING_DATE:
-        UPDATE_FIELDS["BILLING_DATE"] = BILLING_DATE
-    if AVG_MONTHLY_REVENUE:
-        UPDATE_FIELDS["AVG_MONTHLY_REVENUE"] = AVG_MONTHLY_REVENUE
-    if AVG_MONTHLY_REQUIREMENT:
-        UPDATE_FIELDS["AVG_MONTHLY_REQUIREMENT"] = AVG_MONTHLY_REQUIREMENT
-
-    RESULT = DB["CUSTOMERS"].UPDATE_ONE({"_ID": CUSTOMER_ID}, {"$SET": UPDATE_FIELDS})
-    if RESULT.MATCHED_COUNT == 0:
-        return {"MESSAGE": "CUSTOMER NOT FOUND."}
-    return {"MESSAGE": "CUSTOMER UPDATED SUCCESSFULLY."}
-
-
 # Delete a customer
 def DELETE_CUSTOMER(CUSTOMER_ID):
     DB = get_db()
@@ -428,5 +378,4 @@ if __name__ == "__main__":
     else:
         print("Database connection is not active.")
 
-    new_client_response = generate_new_client_response()
-    print(new_client_response)
+    create_customer()
