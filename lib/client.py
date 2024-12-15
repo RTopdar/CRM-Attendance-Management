@@ -4,6 +4,7 @@ from lib.db import (
     get_all_customers,
     update_customer_data,
     save_new_customer_data,
+    update_client_attendance_entry
 )
 
 client_bp = Blueprint("client", __name__)
@@ -64,3 +65,24 @@ def update_customer():
         return jsonify(message), 200
     else:
         return jsonify(message), 400
+
+@client_bp.route("/bill", methods=["POST"])
+def update_customer_billing_data():
+    data = request.json
+    DATE = data.get("DATE")
+    CLIENT_ID = data.get("CLIENT_ID")
+    ATTENDANCE_DATA = data.get("ATTENDANCE_DATA")
+
+    if DATE is None:
+        return jsonify({"message": "DATE is required."}), 400
+    if CLIENT_ID is None:
+        return jsonify({"message": "CLIENT_ID is required."}), 400
+    if ATTENDANCE_DATA is None:
+        return jsonify({"message": "ATTENDANCE_DATA is required."}), 400
+    
+    message = update_client_attendance_entry(DATE, CLIENT_ID, ATTENDANCE_DATA)
+
+    if message == "Client Attendance Entry Updated Successfully":
+        return jsonify({"MESSAGE": message}), 200
+    else:
+        return jsonify({"MESSAGE": message}), 400

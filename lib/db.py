@@ -143,6 +143,28 @@ def create_Attendance_Entry(date=None):
         return new_entry
 
 
+
+def update_client_attendance_entry(DATE, CLIENT_ID, ATTENDANCE_DATA):
+    db = get_db()
+    entry = db["Daily_Attendance"].find_one({"DATE": DATE})
+    if entry is None:
+        return "Attendance Entry does not exist."
+    
+    # Update the customer's attendance data
+    result = db["Customers"].update_one(
+        {"_id": ObjectId(CLIENT_ID)},
+        {
+            "$set": {
+                f"ATTENDANCE_DATA.{DATE}": ATTENDANCE_DATA
+            }
+        }
+    )
+    
+    if result.matched_count == 0:
+        return "Customer not found."
+    
+    return "Client Attendance Entry Updated Successfully"
+
 # Update the Attendance Entry
 def update_attendance_entry(DATE, WORKER_DATA):
     present = 0
